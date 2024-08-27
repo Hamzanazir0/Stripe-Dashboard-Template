@@ -7,10 +7,12 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = array();
 }
 
-function addToCart($id, $price)
+function addToCart($name, $price, $billing)
 {
     $_SESSION['cart'] = array();
-    $_SESSION['cart'][$id] = $price;
+    $_SESSION['cart']['name'] = $name;
+    $_SESSION['cart']['price'] = $price;
+    $_SESSION['cart']['billing'] = $billing;
 }
 
 function removeFromCart()
@@ -29,16 +31,17 @@ function emptyCart()
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    $action = $_POST['action'];
-    $id = $_POST['id'];
-    $price = $_POST['price'];
+    $cart_action = $_POST['action'];
+    $cart_name = $_POST['name'];
+    $cart_price = $_POST['price'];
+    $cart_billing = $_POST['billing'];
 
-    if ($action == 'add') {
-        addToCart($id, $price);
-    } elseif ($action == 'remove') {
+    if ($cart_action == 'add') {
+        addToCart($cart_name, $cart_price, $cart_billing);
+    } elseif ($cart_action == 'remove') {
         removeFromCart();
     }
 
-    header("Location: cart.php");
+    header("Location: ../cart.php");
     exit();
 }

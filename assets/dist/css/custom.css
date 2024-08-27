@@ -1,0 +1,234 @@
+.cart_page .clear_btn {
+  background: none;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  width: fit-content;
+  height: fit-content;
+  line-height: unset;
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  float: right;
+  color: red;
+}
+
+/* ################################# */
+/*       Checkout Page               */
+/* ################################# */
+
+.checkout_page address {
+  font-style: normal;
+  margin: 0 !important;
+}
+
+.checkout_page fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+.checkout_page h1 {
+  font-size: var(--font-size-h1);
+  line-height: 1.2;
+  margin-block: 0 1.5em;
+}
+
+.checkout_page h2 {
+  font-size: var(--font-size-h2);
+  line-height: 1.2;
+  margin-block: 0 0.5em;
+}
+
+.checkout_page legend {
+  font-weight: 600;
+  margin-block-end: 0.5em;
+  padding: 0;
+  font-size: 15px;
+}
+.checkout_page .form-group {
+  margin-bottom: 20px;
+}
+.checkout_page input {
+  border: 0;
+  color: inherit;
+  font: inherit;
+}
+
+.checkout_page input[type="radio"] {
+  accent-color: var(--color-primary);
+}
+
+.checkout_page table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+.checkout_page tbody {
+  color: #b4b4b4;
+}
+
+.checkout_page td {
+  padding-block: 0.125em;
+}
+
+.checkout_page tfoot {
+  border-top: 1px solid #b4b4b4;
+  font-weight: 600;
+}
+
+.checkout_page .align {
+  display: grid;
+  place-items: center;
+}
+
+.checkout_page .button {
+  align-items: center;
+  background-color: var(--color-primary);
+  border-radius: 999em;
+  color: #fff;
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+  padding-block: 0.75em;
+  padding-inline: 1em;
+  transition: 0.3s;
+}
+
+.checkout_page .button:focus,
+.checkout_page .button:hover {
+  background-color: #e96363;
+}
+
+.checkout_page .button--full {
+  inline-size: 100%;
+}
+
+.checkout_page .card {
+  border-radius: 1em;
+  padding: 1em;
+}
+
+.checkout_page .form {
+  display: grid;
+  gap: 2em;
+}
+
+.checkout_page .form__radios {
+  display: grid;
+  gap: 1em;
+}
+
+.checkout_page .form__radio {
+  align-items: center;
+  background-color: #fefdfe;
+  border-radius: 1em;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
+  display: flex;
+  padding: 1em;
+}
+
+.checkout_page .form__radio label {
+  align-items: center;
+  display: flex;
+  flex: 1;
+  gap: 1em;
+}
+
+.checkout_page .header {
+  display: flex;
+  justify-content: center;
+  padding-block: 0.5em;
+  padding-inline: 1em;
+}
+
+.checkout_page .icon {
+  block-size: 1em;
+  display: inline-block;
+  fill: currentColor;
+  inline-size: 1em;
+  vertical-align: middle;
+}
+
+.checkout_page .checkout_container {
+  background-color: #fbf6f7;
+  background-image: linear-gradient(to bottom, #fbf6f7, #fff);
+  border-radius: 2em;
+  box-shadow: 0 0 1em rgba(0, 0, 0, 0.0625);
+  width: 800px;
+  padding: 2em;
+  margin: auto;
+}
+
+.checkout_page .checkout_btn {
+  min-width: 100%;
+  text-align: center;
+  border-radius: 1em;
+}
+.checkout_page .checkout_btn:hover {
+  cursor: pointer;
+}
+.flex-1 {
+  flex: 1 !important;
+}
+.checkout_page .item_name {
+  font-weight: 600;
+  font-size: 20px;
+}
+.checkout_page .item_price {
+  font-weight: 600;
+  font-size: 20px;
+}
+.checkout_page .item_price span {
+  font-weight: 400;
+  font-size: 14px;
+}
+.checkout_page .form-group input,
+.checkout_page .form-group textarea {
+  background-color: #e6e6e6;
+}
+
+/* Radio Btn Fix */
+.checkout_page .form__radios input[type="checkbox"],
+.checkout_page .form__radios input[type="radio"] {
+  opacity: unset !important;
+  position: unset !important;
+}
+.checkout_page .form__radios input[type="checkbox"],
+.checkout_page .form__radios input[type="radio"] {
+  padding: unset !important;
+}
+.checkout_page .form__radios form input,
+.checkout_page .form__radios form textarea {
+  color: unset !important;
+}
+.checkout_page .form__radios input {
+  height: unset !important;
+  padding: unset !important;
+}
+.checkout_page .form__radios input,
+.checkout_page .form__radios button,
+.checkout_page .form__radios select,
+.checkout_page .form__radios textarea {
+  background: unset !important;
+  border: unset !important;
+  transition: unset !important;
+  color: unset !important;
+  width: unset !important;
+  border-radius: unset !important;
+}
+.checkout_page .form__radios button,
+.checkout_page .form__radios input {
+  line-height: unset !important;
+}
+.checkout_page .form__radios button,
+.checkout_page .form__radios input,
+.checkout_page .form__radios select,
+.checkout_page .form__radios textarea {
+  font-size: unset !important;
+  margin: unset !important;
+  max-width: unset !important;
+  vertical-align: unset !important;
+}
+/* Radio Btn Fix */

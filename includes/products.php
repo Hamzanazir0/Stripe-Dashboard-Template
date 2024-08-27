@@ -13,9 +13,9 @@
                         <li><?php echo $product["product_description"] ?></li>
 
                     </ul>
-                    <form action="cart.php" method="post">
+                    <form action="core/cart_functions.php" method="post">
                         <input type="hidden" name="action" value="add">
-                        <input type="hidden" name="id" value="<?= $product["product_name"] ?>">
+                        <input type="hidden" name="name" value="<?= $product["product_name"] ?>">
                         <input type="hidden" name="price" value="<?= $product["product_price"] ?>">
                         <input type="hidden" name="billing" value="<?= $product["product_billing"] ?>">
                         <button type="submit" class="w-100 btn btn-lg <?php echo $product["primary"] ? 'btn-primary' : 'btn-outline-primary' ?>">Buy Now</button>
