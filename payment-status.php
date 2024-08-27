@@ -1,14 +1,9 @@
-<?php
-include_once "../core/login_check.php";
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
 <?php
 
-include_once "../config/config.php";
-include_once "../core/db_connection.php";
+include_once "config/config.php";
 
 $payment_ref_id = $statusMsg = '';
 $status = 'error';

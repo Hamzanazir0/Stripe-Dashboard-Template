@@ -21,8 +21,7 @@ include_once "../core/login_check.php";
     <?php include "includes/header.php"; ?>
 
 
-    <?php include "../includes/products.php"; ?>
-
+    <?php include "includes/template.php"; ?>
 
 
     <?php include "includes/footer.php"; ?>

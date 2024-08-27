@@ -30,7 +30,8 @@ $(document).ready(function () {
       } else {
         $("#checkout_error").css("display", "none");
         sessionStorage.setItem("name", name);
-        window.location.href = "./confirmation";
+        // window.location.href = "cart_checkoutFailed.php";
+        window.location.href = "cart_checkoutSuccess.php";
       }
     }
   });

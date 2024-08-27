@@ -6,6 +6,10 @@ if (session_status() == PHP_SESSION_NONE) {
 require 'core/cart_functions.php';
 
 $cartItems = getCartItems();
+if (!isset($cartItems['id'])) {
+    header("Location: pricing.php");
+}
+$product_id = $cartItems['id'];
 ?>
 
 <!doctype html>
@@ -24,11 +28,11 @@ $cartItems = getCartItems();
 
     <script src="https://js.stripe.com/v3/"></script>
 
-    <!-- <style>
+    <style>
         .hidden {
             display: none;
         }
-    </style> -->
+    </style>
 
 </head>
 
@@ -134,54 +138,261 @@ $cartItems = getCartItems();
     <?php include_once "includes/scripts.php"; ?>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ccNoInput = document.getElementById('cc_no');
-            const expiryDateInput = document.getElementById('expiry_date');
-            const csvCodeInput = document.getElementById('csv_code');
+        // Get API Key
+        let STRIPE_PUBLISHABLE_KEY = "<?php echo STRIPE_PUBLISHABLE_KEY; ?>";
 
-            ccNoInput.addEventListener('input', function(e) {
-                let value = ccNoInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-                if (value.length > 16) value = value.slice(0, 16); // Limit to 16 digits
+        // Create an instance of the Stripe object and set your publishable API key
+        const stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
 
-                // Insert a space after every 4 digits
-                ccNoInput.value = value.replace(/(\d{4})/g, '$1 ').trim();
+        // Define card elements
+        let elements;
+
+        // Select payment form element
+        const paymentFrm = document.querySelector("#paymentFrm");
+
+        // Get payment_intent_client_secret param from URL
+        const clientSecretParam = new URLSearchParams(window.location.search).get(
+            "payment_intent_client_secret"
+        );
+
+        // Check whether the payment_intent_client_secret is already exist in the URL
+        setProcessing(true);
+        if (!clientSecretParam) {
+            setProcessing(false);
+
+            // Create an instance of the Elements UI library and attach the client secret
+            initialize();
+        }
+
+        // Check the PaymentIntent creation status
+        checkStatus();
+
+        // Attach an event handler to payment form
+        paymentFrm.addEventListener("submit", handleSubmit);
+
+        // Fetch a payment intent and capture the client secret
+        let payment_intent_id;
+        async function initialize() {
+            console.log("initialize");
+            const {
+                id,
+                clientSecret
+            } = await fetch("payment_init.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    request_type: "create_payment_intent",
+                    product_id: "<?php echo $product_id; ?>",
+                    product_price: "<?php echo $products[$product_id]["product_price"]; ?>",
+                    product_name: "<?php echo $products[$product_id]["product_name"]; ?>",
+                }),
+            }).then((r) => {
+                return r.json();
             });
 
-            expiryDateInput.addEventListener('input', function(e) {
-                let value = expiryDateInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-                if (value.length > 4) value = value.slice(0, 4); // Limit to 4 digits (MMYY)
+            const appearance = {
+                theme: "stripe",
+                rules: {
+                    ".Label": {
+                        fontWeight: "bold",
+                        textTransform: "uppercase",
+                    },
+                },
+            };
 
-                // Insert a slash after the month
-                if (value.length > 2) {
-                    value = value.slice(0, 2) + '/' + value.slice(2);
+            elements = stripe.elements({
+                clientSecret,
+                appearance
+            });
+
+            const paymentElement = elements.create("payment");
+            paymentElement.mount("#paymentElement");
+
+            payment_intent_id = id;
+        }
+
+        let CustomerId = "";
+
+        // Card form submit handler
+        async function handleSubmit(e) {
+            e.preventDefault();
+            setLoading(true);
+
+            let customer_name = document.getElementById("paymentCardName").value;
+            let customer_email = document.getElementById("paymentCardEmail").value;
+
+            const {
+                id,
+                customer_id
+            } = await fetch("payment_init.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    request_type: "create_customer",
+                    payment_intent_id: payment_intent_id,
+                    name: customer_name,
+                    email: customer_email,
+                }),
+            }).then((r) => {
+                return r.json();
+            });
+
+            const {
+                error
+            } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    // Make sure to change this to your payment completion page
+                    // return_url: window.location.href + "?customer_id=" + customer_id,
+                    return_url: window.location.href + "?customer_id=" + customer_id,
+                },
+            });
+
+            // This point will only be reached if there is an immediate error when
+            // confirming the payment. Otherwise, your customer will be redirected to
+            // your `return_url`. For some payment methods like iDEAL, your customer will
+            // be redirected to an intermediate site first to authorize the payment, then
+            // redirected to the `return_url`.
+            if (error.type === "card_error" || error.type === "validation_error") {
+                showMessage(error.message);
+            } else {
+                showMessage("An unexpected error occured.");
+            }
+
+            setLoading(false);
+        }
+
+
+
+        // Fetch the PaymentIntent status after payment submission
+        async function checkStatus() {
+            console.log("Inside Check Status");
+            const clientSecret = new URLSearchParams(window.location.search).get(
+                "payment_intent_client_secret"
+            );
+            const customerID = new URLSearchParams(window.location.search).get(
+                "customer_id"
+            );
+            if (!clientSecret) {
+                console.log("Client secret not found in URL");
+                return;
+            }
+
+            const {
+                paymentIntent
+            } = await stripe.retrievePaymentIntent(clientSecret);
+
+            if (paymentIntent) {
+                console.log("Inside PaymentIntent");
+                switch (paymentIntent.status) {
+                    case "succeeded":
+                        console.log("Intent Successful");
+                        // Post the transaction info to the server-side script and redirect to the payment status page
+                        fetch("payment_init.php", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    request_type: "payment_insert",
+                                    payment_intent: paymentIntent,
+                                    customer_id: customerID,
+                                    product_id: "<?php echo $product_id; ?>",
+                                    product_price: "<?php echo $products[$product_id]["product_price"]; ?>",
+                                    product_name: "<?php echo $products[$product_id]["product_name"]; ?>",
+                                }),
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                // console.log("Before IF");
+                                if (data.payment_txn_id) {
+                                    console.log("TXN Id Found");
+                                    window.location.href =
+                                        "cart_checkoutSuccess.php?pid=" + data.payment_txn_id;
+                                } else {
+                                    console.log("TXN Id not found");
+                                    showMessage(data.error);
+                                    setReinit();
+                                }
+                            })
+                            .catch((e) => {
+                                console.log("Fetch Error");
+                                console.log(e);
+                            });
+
+                        break;
+                    case "processing":
+                        console.log("Intent Processing");
+                        showMessage("Your payment is processing.");
+                        setReinit();
+                        break;
+                    case "requires_payment_method":
+                        console.log("Intent Payment Method not successfull");
+                        showMessage("Your payment was not successful, please try again.");
+                        setReinit();
+                        break;
+                    default:
+                        console.log("Running Default Case");
+                        showMessage("Something went wrong.");
+                        setReinit();
+                        break;
                 }
+            } else {
+                console.log("Outside Intent Something Wrong");
+                showMessage("Something went wrong.");
+                setReinit();
+            }
+        }
 
-                expiryDateInput.value = value;
-            });
+        // Display message
+        function showMessage(messageText) {
+            const messageContainer = document.querySelector("#paymentResponse");
 
-            expiryDateInput.addEventListener('blur', function() {
-                const value = expiryDateInput.value;
-                if (value.length === 5) {
-                    const month = parseInt(value.slice(0, 2), 10);
-                    const year = parseInt('20' + value.slice(3, 5), 10);
-                    const currentYear = new Date().getFullYear();
-                    const currentMonth = new Date().getMonth() + 1;
+            messageContainer.classList.remove("hidden");
+            messageContainer.textContent = messageText;
 
-                    // Validate the month and year
-                    if (month < 1 || month > 12 || year < currentYear || (year === currentYear && month < currentMonth)) {
-                        alert('Invalid expiry date');
-                        expiryDateInput.value = '';
-                    }
-                }
-            });
+            setTimeout(function() {
+                messageContainer.classList.add("hidden");
+                messageText.textContent = "";
+            }, 5000);
+        }
 
-            csvCodeInput.addEventListener('input', function(e) {
-                let value = csvCodeInput.value.replace(/\D/g, ''); // Remove all non-digit characters
-                if (value.length > 3) value = value.slice(0, 3); // Limit to 3 digits
-                csvCodeInput.value = value;
-            });
-        });
+        // Show a spinner on payment submission
+        function setLoading(isLoading) {
+            if (isLoading) {
+                // Disable the button and show a spinner
+                document.querySelector("#submitBtn").disabled = true;
+                document.querySelector("#paymentPayBtn").textContent = "Processing...";
+            } else {
+                // Enable the button and hide spinner
+                document.querySelector("#submitBtn").disabled = false;
+                document.querySelector("#paymentPayBtn").textContent = "Pay";
+            }
+        }
+
+        // Show a spinner on payment form processing
+        function setProcessing(isProcessing) {
+            if (isProcessing) {
+                paymentFrm.classList.add("hidden");
+                document.querySelector("#frmProcess").classList.remove("hidden");
+            } else {
+                paymentFrm.classList.remove("hidden");
+                document.querySelector("#frmProcess").classList.add("hidden");
+            }
+        }
+
+        // Show payment re-initiate button
+        function setReinit() {
+            document.querySelector("#frmProcess").classList.add("hidden");
+            document.querySelector("#payReinit").classList.remove("hidden");
+        }
     </script>
+
+    <script src="assets/dist/js/checkout.js"></script>
 
 </body>
 

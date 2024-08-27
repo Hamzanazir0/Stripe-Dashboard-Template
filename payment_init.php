@@ -1,8 +1,5 @@
 <?php
-
-include_once "../core/login_check.php";
-include_once "../config/config.php";
-include_once "../core/db_connection.php";
+include_once "config/config.php";
 
 // Include the Stripe PHP library 
 require_once 'stripe-php/init.php';
@@ -95,10 +92,8 @@ if ($jsonObj->request_type == 'create_payment_intent') {
     // Retrieve customer info 
     try {
         $customer = \Stripe\Customer::retrieve($customer_id);
-
     } catch (Exception $e) {
         $api_error = $e->getMessage();
-
     }
 
 
@@ -132,29 +127,28 @@ if ($jsonObj->request_type == 'create_payment_intent') {
         //     $row = mysqli_fetch_assoc($result);
 
 
-        $sql = "SELECT id FROM transactions WHERE txn_id = '$transaction_id'";
-        $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+        // $sql = "SELECT id FROM transactions WHERE txn_id = '$transaction_id'";
+        // $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 
 
 
 
-        $payment_id = 0;
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $payment_id = $row['id'];
-        } else {
-            // Insert transaction data into the database 
-            $sql = "INSERT INTO transactions (customer_name,customer_email,item_name,item_price,item_price_currency,paid_amount,paid_amount_currency,txn_id,payment_status,created,modified) 
-            VALUES ('$customer_name','$customer_email','$itemName','$itemPrice','$currency','$paid_amount','$paid_currency','$transaction_id','$payment_status',NOW(),NOW())";
+        // $payment_id = 0;
+        // if (mysqli_num_rows($result) > 0) {
+        //     $row = mysqli_fetch_assoc($result);
+        //     $payment_id = $row['id'];
+        // } else {
+        //     $sql = "INSERT INTO transactions (customer_name,customer_email,item_name,item_price,item_price_currency,paid_amount,paid_amount_currency,txn_id,payment_status,created,modified) 
+        //     VALUES ('$customer_name','$customer_email','$itemName','$itemPrice','$currency','$paid_amount','$paid_currency','$transaction_id','$payment_status',NOW(),NOW())";
 
-            $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
+        //     $result = mysqli_query($conn, $sql) or die(mysqli_error($conn));
 
 
-            if ($result) {
+        //     if ($result) {
 
-                $payment_id = mysqli_insert_id($conn);
-            }
-        }
+        //         $payment_id = mysqli_insert_id($conn);
+        //     }
+        // }
 
         $output = [
             'payment_txn_id' => base64_encode($transaction_id)

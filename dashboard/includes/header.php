@@ -6,45 +6,39 @@ $curPageName = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], 
     <nav id="dashboardNav">
         <div>
             <ul>
-                <li class="nav-item">
+                <li class="nav-item me-3 me-3">
                     <a class="nav-link <?php echo  $curPageName == 'index.php' ? 'active' : '' ?>" aria-current="page" href="index">
                         <span data-feather="home"></span>
                         Dashboard
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link  <?php echo  $curPageName == 'pricing.php' ? 'active' : '' ?>" href="pricing">
-                        <span data-feather="dollar-sign"></span>
-                        Pricing
-                    </a>
-                </li>
 
-                <li class="nav-item">
+                <li class="nav-item me-3">
                     <a class="nav-link <?php echo  $curPageName == 'api.php' ? 'active' : '' ?>" href="api">
                         <span data-feather="send"></span>
                         API
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item me-3">
                     <a class="nav-link <?php echo  $curPageName == 'documentation.php' ? 'active' : '' ?>" href="documentation">
                         <span data-feather="paperclip"></span>
                         Documentation
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item me-3">
                     <a class="nav-link <?php echo  $curPageName == 'usage.php' ? 'active' : '' ?>" href="usage">
                         <span data-feather="mouse-pointer"></span>
                         Usage
                     </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item me-3">
                     <a class="nav-link <?php echo  $curPageName == 'support.php' ? 'active' : '' ?>" href="support">
                         <span data-feather="help-circle"></span>
                         Support
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item me-3">
                     <a class="nav-link <?php echo  $curPageName == 'settings.php' ? 'active' : '' ?>" href="settings">
                         <span data-feather="settings"></span>
                         Settings

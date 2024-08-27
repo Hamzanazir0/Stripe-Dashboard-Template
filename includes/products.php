@@ -15,6 +15,7 @@
                     </ul>
                     <form action="core/cart_functions.php" method="post">
                         <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="id" value="<?= $ind ?>">
                         <input type="hidden" name="name" value="<?= $product["product_name"] ?>">
                         <input type="hidden" name="price" value="<?= $product["product_price"] ?>">
                         <input type="hidden" name="billing" value="<?= $product["product_billing"] ?>">
