@@ -6,8 +6,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 define("USE_STRIPE", false); // true = stripe checkout(Need API Keys Below) ; false = normal checkout without stripe
 
-define('STRIPE_API_KEY', 'asdsadsadasd');
-define('STRIPE_PUBLISHABLE_KEY', 'adasdasdsad');
+define('STRIPE_API_KEY', 'sdjashjkdhkashdkjashjda');
+define('STRIPE_PUBLISHABLE_KEY', 'alsdjklashasjkdhkj');
 
 
 define("DB_HOST", "localhost");

@@ -177,7 +177,7 @@ $product_id = $cartItems['id'];
             const {
                 id,
                 clientSecret
-            } = await fetch("payment_init.php", {
+            } = await fetch("core/payment_init.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -226,7 +226,7 @@ $product_id = $cartItems['id'];
             const {
                 id,
                 customer_id
-            } = await fetch("payment_init.php", {
+            } = await fetch("core/payment_init.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -292,7 +292,7 @@ $product_id = $cartItems['id'];
                     case "succeeded":
                         console.log("Intent Successful");
                         // Post the transaction info to the server-side script and redirect to the payment status page
-                        fetch("payment_init.php", {
+                        fetch("core/payment_init.php", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json"

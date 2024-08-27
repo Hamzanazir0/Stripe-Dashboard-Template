@@ -1,8 +1,8 @@
 <?php
-include_once "config/config.php";
+include_once "../config/config.php";
 
 // Include the Stripe PHP library 
-require_once 'stripe-php/init.php';
+require_once '../assets/plugins/stripe-php/init.php';
 
 // Set API key 
 \Stripe\Stripe::setApiKey(STRIPE_API_KEY);
