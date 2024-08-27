@@ -14,6 +14,8 @@ $curPageName = substr($_SERVER["SCRIPT_NAME"], strrpos($_SERVER["SCRIPT_NAME"], 
         <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
             <a class="me-3 py-2 text-dark text-decoration-none" href="index">Home</a>
             <a class="me-3 py-2 text-dark text-decoration-none" href="pricing">Pricing</a>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="cart">Cart</a>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="cart_checkout">Checkout</a>
             <a class="me-3 py-2 text-dark text-decoration-none" href="contact">Contact</a>
 
             <?php if (isset($_SESSION['user_id'])) {

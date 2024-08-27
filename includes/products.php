@@ -1,9 +1,7 @@
 <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-
     <?php
     foreach ($products as $ind => $product) {
     ?>
-
         <div class="col">
             <div class="card mb-4 rounded-3 shadow-sm <?php echo $product["primary"] ? 'border-primary' : '' ?>">
                 <div class="card-header py-3 <?php echo $product["primary"] ? ' text-white bg-primary border-primary' : '' ?>">
@@ -15,30 +13,17 @@
                         <li><?php echo $product["product_description"] ?></li>
 
                     </ul>
-
-                    <?php
-
-                    $requestURI = $_SERVER['REQUEST_URI'];
-                    $requestURIArr = explode("/", $requestURI);
-
-                    foreach ($requestURIArr as $key => $value) {
-                        if ($value == "dashboard") {
-                            $link = "payment-form?product=" . $ind;
-                            break;
-                        } else {
-                            $link = "dashboard/payment-form?product=" . $ind;
-                        }
-                    }
-
-                    ?>
-                    <a href="<?php echo $link ?>" class="w-100 btn btn-lg <?php echo $product["primary"] ? 'btn-primary' : 'btn-outline-primary' ?>">Buy Now</a>
+                    <form action="cart.php" method="post">
+                        <input type="hidden" name="action" value="add">
+                        <input type="hidden" name="id" value="<?= $product["product_name"] ?>">
+                        <input type="hidden" name="price" value="<?= $product["product_price"] ?>">
+                        <input type="hidden" name="billing" value="<?= $product["product_billing"] ?>">
+                        <button type="submit" class="w-100 btn btn-lg <?php echo $product["primary"] ? 'btn-primary' : 'btn-outline-primary' ?>">Buy Now</button>
+                    </form>
                 </div>
             </div>
         </div>
-
     <?php
     }
     ?>
-
-
 </div>
